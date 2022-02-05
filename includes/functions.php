@@ -37,7 +37,7 @@ function db() {
 function db_query($sql, $exec = false) {
 	if (empty($sql)) return false;
 
-	if ($exec) return db()->exec($exec);
+	if ($exec) return db()->exec($sql);
 
 	return db()->query($sql);
 }
@@ -51,7 +51,8 @@ function get_posts($user_id = 0) {
 }
 
 function get_user_info($login){
-	return db_query("SELECT * FROM `users` WHERE login = $login;")->fetch();
+	//debug(db_query("SELECT * FROM `users` WHERE login = '$login';")->fetch(), true);	
+	return db_query("SELECT * FROM `users` WHERE login = '$login';")->fetch();
 }
 
 function add_user($login, $pass) {
@@ -63,26 +64,28 @@ function add_user($login, $pass) {
 }
 
 function register_user($auth_data) {
-	debug($auth_data , true);
-	if (empty($auth_data) || !isset($auth_data['login']) || empty($auth_data['login'])) return false;
+	//debug($auth_data , true);
+	if (empty($auth_data) || !isset($auth_data['login']) || empty($auth_data['login'])) return false; 
+	if (empty($auth_data) || !isset($auth_data['pass']) || empty($auth_data['pass'])) return false; 
+	if (empty($auth_data) || !isset($auth_data['pass2']) || empty($auth_data['pass2'])) return false; 	
+	$user = get_user_info($auth_data['login']); 
 
-	$user = get_user_info($auth_data['login']);
 
-	if (!empty($user)) {
-		$_SESSION['error'] = 'Пользователь ' . $auth_data['login'] . ' уже существует';
-		header("Location: " . get_url('register.php'));
-	}
+	if (!empty($user)) { 
+		$_SESSION['error'] = 'Пользователь ' . $auth_data['login'] . ' уже существует'; 
+		header("Location: " . get_url('register.php')); 
+	} 
 
-	if ($auth_data['pass'] !== $auth_data['pass2']) {
-		$_SESSION['error'] = 'Пароли не совпадают ';
-		header('Location: ' . get_url('register.php'));
-		die;
-	}
+	if ($auth_data['pass'] !== $auth_data['pass2']) { 
+		$_SESSION['error'] = 'Пароли не совпадают '; 
+		header('Location: ' . get_url('register.php')); 
+		die;  
+	} 
 
-	if (add_user($auth_data['login'], $auth_data['pass'])) {
-		header('Location: ' . get_url(''));
-		die;
-	}
+	if (add_user($auth_data['login'], $auth_data['pass'])) { 
+		header('Location: ' . get_url('index.php'));  
+		die; 
+	} 
 }
 
 function login($auth_data) {
