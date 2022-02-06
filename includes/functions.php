@@ -74,6 +74,7 @@ function register_user($auth_data) {
 	if (!empty($user)) { 
 		$_SESSION['error'] = 'Пользователь ' . $auth_data['login'] . ' уже существует'; 
 		header("Location: " . get_url('register.php')); 
+		die;
 	} 
 
 	if ($auth_data['pass'] !== $auth_data['pass2']) { 
@@ -89,7 +90,26 @@ function register_user($auth_data) {
 }
 
 function login($auth_data) {
-
+	if (empty($auth_data) || !isset($auth_data['login']) || empty($auth_data['login'])) return false;
+	if (empty($auth_data) || !isset($auth_data['pass']) || empty($auth_data['pass'])) return false; 
+	$user = get_user_info($auth_data['login']); 
+	if(empty($user)) {
+		$_SESSION['error'] = 'Пользователь с такими логином и паролем не найден '; 
+		header('Location: ' . get_url('')); 
+		die;
+	}
+	//debug($user['id'], true); 
+	if (password_verify($auth_data['pass'], $user['pass'])) {
+		$_SESSION['user'] = $user; // Переписать, не сохранять хеш.
+		$_SESSION['error'] = '';
+		header("Location: " . get_url('user_posts.php?id=' . $user['id']));
+		die;
+	} else {
+		$_SESSION['error'] = "Пароль неверный";
+		header("Location: " . get_url(''));
+		die;
+	}
+	//debug([$auth_data, $user], true);
 }
 
 function get_error_message()
