@@ -2,10 +2,10 @@
 include_once "includes/functions.php";
 $error = get_error_message();
 
-if (isset($_SESSION['user']['id']) && !empty($_SESSION['user']['id'])) {
-	$id = $_SESSION['user']['id'];
-} else if (isset($_GET['id']) && !empty($_GET['id'])) {
+if (isset($_GET['id']) && !empty($_GET['id'])) {
 	$id = $_GET['id'];
+} else if (isset($_SESSION['user']['id']) && !empty($_SESSION['user']['id'])) {
+	$id = $_SESSION['user']['id'];
 } else {
 	$id = 0;
 }
