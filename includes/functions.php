@@ -8,6 +8,10 @@ function debug($var, $stop = false) {
 	if ($stop) die();
 }
 
+function redir($location) {
+	header('Location:' .get_url($location));
+}
+
 function get_url($page ='') {
 	return HOST . "/$page";
 }
@@ -95,8 +99,9 @@ function login($auth_data) {
 	$user = get_user_info($auth_data['login']); 
 	if(empty($user)) {
 		$_SESSION['error'] = 'Пользователь с такими логином и паролем не найден '; 
-		header('Location: ' . get_url('')); 
-		die;
+		redir('');
+		//header('Location: ' . get_url('')); 
+		//die;
 	}
 	//debug($user['id'], true); 
 	if (password_verify($auth_data['pass'], $user['pass'])) {
