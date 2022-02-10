@@ -23,7 +23,7 @@ function get_page_title($title = "") {
 		return HOST;
 	}
 }
-
+ 
 function db() {
 	try {
 		return new PDO("mysql:host=". DB_HOST. ";dbname=". DB_NAME . ";charset=utf8", DB_USER, DB_PASS,
