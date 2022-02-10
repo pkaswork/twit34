@@ -129,6 +129,14 @@ function logged_in() {
 
 function add_post($text, $image) {
 	$text = trim($text);
-	$id = $_SESSION['user']['id'];
-	return db_query("INSERT INTO `posts` (`id`, `user_id`, `text`, `image`) VALUES (NULL, '$id', '$text', '$image');");
+	if (mb_strlen($text) > 255) {
+		$text = mb_substr($text, 0, 250) . '...';
+	}
+	$user_id = $_SESSION['user']['id'];
+	return db_query("INSERT INTO `posts` (`id`, `user_id`, `text`, `image`) VALUES (NULL, '$user_id', '$text', '$image');");
+}
+
+function delete_post($id) {
+	$user_id = $_SESSION['user']['id'];
+	return db_query("DELETE FROM `posts` WHERE `id` = $id AND `user_id` = $user_id;");
 }
