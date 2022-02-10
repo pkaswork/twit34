@@ -107,7 +107,7 @@ function login($auth_data) {
 		change_dir('user_posts.php?id=' . $user['id']);
 	} else {
 		$_SESSION['error'] = "Пароль неверный";
-		change_dir();
+		change_dir('');
 	}
 	//debug([$auth_data, $user], true);
 }
@@ -121,4 +121,14 @@ function get_error_message()
 	}
 
 	return $error;
+}
+
+function logged_in() {
+	return isset($_SESSION['user']['id']) && !empty($_SESSION['user']['id']);
+}
+
+function add_post($text, $image) {
+	$text = trim($text);
+	$id = $_SESSION['user']['id'];
+	return db_query("INSERT INTO `posts` (`id`, `user_id`, `text`, `image`) VALUES (NULL, '$id', '$text', '$image');");
 }
