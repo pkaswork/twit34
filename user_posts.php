@@ -4,7 +4,7 @@ $error = get_error_message();
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
 	$id = $_GET['id'];
-} else if (isset($_SESSION['user']['id']) && !empty($_SESSION['user']['id'])) {
+} else if (logged_in()) {
 	$id = $_SESSION['user']['id'];
 } else {
 	$id = 0;
@@ -17,7 +17,9 @@ if (!empty($posts))
 	$title = "Твиты пользователей(я) @" . $posts[0]['login'];
 
 include_once "includes/header.php";
+if (logged_in()) { 
 include_once "includes/tweet_form.php";
+} 
 include_once "includes/posts.php";
 include_once "includes/footer.php";
 ?>
